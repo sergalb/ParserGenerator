@@ -5,18 +5,17 @@ grammar_
     ;
 
 parsingRule
-    :   PARSER_IDENTIFIER COLON parsingAtom+ SEMI
+    :   PARSER_IDENTIFIER COLON parsingAtom OR? SEMI
     ;
 
 parsingAtom
-    :   lexingAtom
+    :   LEXER_IDENTIFIER
     |   PARSER_IDENTIFIER
     |   parsingAtom OR parsingAtom
     |   LPAREN parsingAtom+ RPAREN
     |   parsingAtom QUESTION
     |   parsingAtom PLUS
     |   parsingAtom STAR
-    |   parsingAtom OR
     ;
 
 lexingRule
@@ -86,7 +85,6 @@ LexerLiteral
     : APOSTROPHE LITERAL+? APOSTROPHE
     | LBRACK LITERAL+? RBRACK
     ;
-
 
 fragment
 LITERAL : . ;

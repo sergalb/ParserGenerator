@@ -16,7 +16,7 @@ val lexerCode =
             "import kotlin.text.Regex.Companion.escape\n" +
             "class Lexer(val input: String) {\n" +
             "    var cur = 0\n" +
-            "    val regexps:MutableMap<String, Token> = HashMap()\n" +
+            "    val regexps:MutableMap<String, MyToken> = HashMap()\n" +
             "    lateinit var whiteSpaces: List<Char>\n" +
             "    init {\n" +
             "        val tokensFile = File(\"${baseDir.replace("\\", "\\\\")}\\\\$tokensFileName\")\n" +
@@ -30,16 +30,16 @@ val lexerCode =
             "                ws = ws.replace(\"\\\\r\", \"\\r\");\n" +
             "                whiteSpaces = ws.substring(0, ws.length - 1).toList()\n" +
             "            } else {\n" +
-            "                regexps[\"\"\"\$value\"\"\"] = Token(identifier, null)\n" +
+            "                regexps[\"\"\"\$value\"\"\"] = MyToken(identifier, null)\n" +
             "            }\n" +
             "        }\n" +
             "    }\n" +
-            "    fun scan(): List<Token> {\n" +
-            "        val res:MutableList<Token> = ArrayList()\n" +
+            "    fun scan(): List<MyToken> {\n" +
+            "        val res:MutableList<MyToken> = ArrayList()\n" +
             "        while (cur < input.length) {\n" +
             "            var maxPref = 0\n" +
             "            var bestMatch: MatchResult? = null\n" +
-            "            var bestToken: Token? = null\n" +
+            "            var bestToken: MyToken? = null\n" +
             "            var isPrefixWhitespace = false\n" +
             "            for (ws in whiteSpaces) {\n" +
             "                if (input[cur] == ws) {\n" +
@@ -62,7 +62,7 @@ val lexerCode =
             "                    if ((match.range.start == cur) && match.range.count() > maxPref) {\n" +
             "                        maxPref = match.range.count()\n" +
             "                        bestMatch = match\n" +
-            "                        bestToken = Token(token)\n" +
+            "                        bestToken = MyToken(token)\n" +
             "                    }\n" +
             "                }\n" +
             "            }\n" +
@@ -82,8 +82,8 @@ val lexerCode =
             "\n" +
             "}\n" +
             "\n"
-val tokenCode = "data class Token(val name: String, var value: String?) {\n" +
-        "    constructor(other: Token) : this(other.name, other.value)\n" +
+val tokenCode = "data class MyToken(val name: String, var value: String?) {\n" +
+        "    constructor(other: MyToken) : this(other.name, other.value)\n" +
         "}"
 fun main() {
     generateLexer()
@@ -95,7 +95,7 @@ fun main() {
 }
 
 fun generateTokenRules() {
-    val lexer = GrammarForGrammarsLexer(CharStreams.fromFileName("$baseDir\\Java.g4"))
+    val lexer = GrammarForGrammarsLexer(CharStreams.fromFileName("$baseDir\\$grammarFile"))
     val parser = GrammarForGrammarsParser(CommonTokenStream(lexer))
     val tree = parser.grammar_()
     val outputStreamWriter = OutputStreamWriter(FileOutputStream("$baseDir\\$tokensFileName"))
