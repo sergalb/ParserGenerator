@@ -27,9 +27,6 @@ class FirstGeneratorVisitor(val first: MutableMap<String, MutableSet<String>> = 
         if (ctx === null) {
             return emptySet()
         }
-        /*if (ctx.PARSER_IDENTIFIER().text == "value") {
-            print("a")
-        }*/
         val res: MutableSet<String> = HashSet()
         for (child in ctx.children) {
             if (child !is TerminalNode) {
@@ -56,40 +53,7 @@ class FirstGeneratorVisitor(val first: MutableMap<String, MutableSet<String>> = 
         if (ctx === null) {
             return emptySet()
         }
-        val res: MutableSet<String> = HashSet()
-        if (ctx.childCount == 1) {
-            return setOf(ctx.text)
-        }
-//        if (ctx.childCount == 2) {
-//            res.addAll(ctx.getChild(0).accept(this))
-//            val operator = ctx.getChild(1).text
-//            if (operator == "?" || operator == "*") {
-//                res.add("")
-//            }
-//            return res
-//        }
-//        // A -> B | C
-//        if (ctx.childCount == 3 && ctx.getChild(1).text == "|") {
-//            res.addAll(ctx.getChild(0).accept(this))
-//            res.addAll(ctx.getChild(2).accept(this))
-//            return res
-//        }
-//        var hasEmpty = true
-//        for (child in ctx.children) {
-//            if (child !is TerminalNode) {
-//                val childFirst = child.accept(this)
-//                res.addAll(childFirst)
-//                res.remove("")
-//                if (!childFirst.contains("")) {
-//                    hasEmpty = false
-//                    break
-//                }
-//            }
-//        }
-//        if (hasEmpty) {
-//            res.add("")
-//        }
-        return res
+        return setOf(ctx.text)
     }
 
 }

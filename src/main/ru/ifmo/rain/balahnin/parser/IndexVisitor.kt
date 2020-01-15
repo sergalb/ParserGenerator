@@ -2,7 +2,7 @@ package ru.ifmo.rain.balahnin.parser
 
 import GrammarForGrammarsBaseVisitor
 
-class IndexVisitor(): GrammarForGrammarsBaseVisitor<Void?>() {
+class IndexVisitor: GrammarForGrammarsBaseVisitor<Void?>() {
     private var ind = 0
     override fun visitParsingRule(ctx: GrammarForGrammarsParser.ParsingRuleContext?): Void? {
         if (ctx === null) {

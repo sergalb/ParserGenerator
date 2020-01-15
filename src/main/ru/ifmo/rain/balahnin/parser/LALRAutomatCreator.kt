@@ -17,10 +17,9 @@ import kotlin.collections.LinkedHashMap
 
 
 val first: MutableMap<String, MutableSet<String>> = LinkedHashMap()
-val follow: MutableMap<String, MutableSet<String>> = LinkedHashMap()
+//val follow: MutableMap<String, MutableSet<String>> = LinkedHashMap()
 //grammarSymbol name and isTerminal
 var alphabet: Map<String, Boolean> = HashMap()
-//val kernels: MutableMap<List<Rule>, AutomatonNode> = HashMap()
 var countStates = 0
 lateinit var root: AutomatonNode
 
@@ -59,12 +58,11 @@ class AutomatonNode(var creationInd: Int, val rules: List<Rule>, var parent: Aut
     var version = 0
 }
 
-fun main() {
+fun generateExecutingTable() {
     val lexer = GrammarForGrammarsLexer(CharStreams.fromFileName("$baseDir\\$grammarFile"))
     val parser = GrammarForGrammarsParser(CommonTokenStream(lexer))
     val tree = parser.grammar_()
     generateFirst(tree)
-    generateFollow(tree)
     generateExecutingAutomaton(tree)
     IndexVisitor().visitGrammar_(tree)
 
@@ -82,6 +80,7 @@ fun main() {
     val oos = ObjectOutputStream(FileOutputStream("$baseDir\\$alphabetFile"))
     oos.writeObject(alphabet)
     oos.close()
+
 }
 
 fun generateFirst(grammarContext: GrammarForGrammarsParser.Grammar_Context) {
@@ -89,11 +88,11 @@ fun generateFirst(grammarContext: GrammarForGrammarsParser.Grammar_Context) {
     visitor.visitGrammar_(grammarContext)
 }
 
-fun generateFollow(grammarContext: GrammarForGrammarsParser.Grammar_Context) {
-    follow["start"] = mutableSetOf("$")
-    val visitor = FollowGeneratorVisitor(first, follow)
-    visitor.visitGrammar_(grammarContext)
-}
+//fun generateFollow(grammarContext: GrammarForGrammarsParser.Grammar_Context) {
+//    follow["start"] = mutableSetOf("$")
+//    val visitor = FollowGeneratorVisitor(first, follow)
+//    visitor.visitGrammar_(grammarContext)
+//}
 
 fun generateExecutingAutomaton(grammarContext: GrammarForGrammarsParser.Grammar_Context) {
     alphabet = AlphabetVisitor().visit(grammarContext)
@@ -316,7 +315,7 @@ fun createTable(node: AutomatonNode, was: MutableList<Boolean> = MutableList(cou
                 table[node.ind][alphabetIndexed["$"]!!] = Pair("a", 0)
             } else {
                 for (lookaheadSymbol in rule.lookahead) {
-                    table[node.ind][alphabetIndexed[lookaheadSymbol]!!] = Pair("r", rule.rule.altNumber)
+                    table[node.ind][alphabetIndexed[lookaheadSymbol]!!] = Pair("r", rule.rule.altNum)
                 }
             }
         }

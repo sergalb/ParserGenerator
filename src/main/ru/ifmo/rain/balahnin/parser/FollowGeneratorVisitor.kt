@@ -62,27 +62,6 @@ class FollowGeneratorVisitor(val first: Map<String, Set<String>>, val follow: Mu
         if (ctx.childCount == 1) {
             addParentFollow(ctx.text)
         }
-//        if (ctx.childCount == 2) {
-//            ctx.getChild(0).accept(this)
-//            return null
-//        }
-//        // A -> B | C
-//        if (ctx.childCount == 3 && ctx.getChild(1).text == "|") {
-//            ctx.getChild(0).accept(this)
-//            ctx.getChild(2).accept(this)
-//            return null
-//        }
-//        for (child in ctx.children.asReversed()) {
-//            if (child !is TerminalNode) {
-//                child.accept(this)
-//                val curFirst = firstByParsingAtom(child as GrammarForGrammarsParser.ParsingAtomContext)
-//                val oldParentFollow = parentFollowStack.pop()
-//                if (curFirst.contains("")) {
-//                    curFirst.addAll(oldParentFollow)
-//                }
-//                parentFollowStack.push(curFirst)
-//            }
-//        }
         return null
     }
 
@@ -102,29 +81,6 @@ class FollowGeneratorVisitor(val first: Map<String, Set<String>>, val follow: Mu
         if (ctx.childCount == 1) {
             return first[ctx.text]?.toMutableSet() ?: mutableSetOf(ctx.text)
         }
-//        if (ctx.childCount == 2) {
-//            res = firstByParsingAtom(ctx.getChild(0) as GrammarForGrammarsParser.ParsingAtomContext)
-//            val operator = ctx.getChild(1).text
-//            if (operator == "?" || operator == "*") {
-//                res.add("")
-//            }
-//            return res
-//        }
-//        // A -> B | C
-//        if (ctx.childCount == 3 && ctx.getChild(1).text == "|") {
-//            res = firstByParsingAtom(ctx.getChild(0) as GrammarForGrammarsParser.ParsingAtomContext)
-//            res.addAll(firstByParsingAtom(ctx.getChild(2) as GrammarForGrammarsParser.ParsingAtomContext))
-//            return res
-//        }
-//
-//        for (child in ctx.children) {
-//            if (child !is TerminalNode) {
-//                res = firstByParsingAtom(child as GrammarForGrammarsParser.ParsingAtomContext)
-//                if (!res.contains("")) {
-//                    break
-//                }
-//            }
-//        }
         return res
     }
 

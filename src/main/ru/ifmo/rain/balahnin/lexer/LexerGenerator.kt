@@ -32,7 +32,7 @@ val lexerCode =
             "                ws = ws.replace(\"\\\\r\", \"\\r\");\n" +
             "                whiteSpaces = ws.substring(0, ws.length - 1).toList()\n" +
             "            } else {\n" +
-            "                regexps[\"\"\"\$value\"\"\"] = MyToken(identifier, null)\n" +
+            "                regexps[\"\"\"\$value\"\"\"] = MyToken(identifier, \"fake\")\n" +
             "            }\n" +
             "        }\n" +
             "    }\n" +
@@ -68,9 +68,6 @@ val lexerCode =
             "                    }\n" +
             "                }\n" +
             "            }\n" +
-            "            if (res.size >= 2 && res[1].value == \"doElse\") {\n" +
-            "                print(\"a\")\n" +
-            "            }\n" +
             "            if (bestMatch !== null) {\n" +
             "                cur += maxPref\n" +
             "                bestToken!!.value = bestMatch.value\n" +
@@ -84,7 +81,7 @@ val lexerCode =
             "\n" +
             "}\n" +
             "\n"
-val tokenCode = "data class MyToken(val name: String, var value: String?) {\n" +
+val tokenCode = "data class MyToken(val name: String, var value: String) {\n" +
         "    constructor(other: MyToken) : this(other.name, other.value)\n" +
         "}"
 fun main() {

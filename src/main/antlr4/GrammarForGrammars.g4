@@ -7,7 +7,7 @@ grammar_
     ;
 
 parsingRule
-    :   PARSER_IDENTIFIER COLON parsingAtom* SEMI
+    :   PARSER_IDENTIFIER COLON parsingAtom* CodeLiteral? SEMI
     ;
 
 parsingAtom
@@ -50,6 +50,8 @@ LPAREN : '(';
 RPAREN : ')';
 LBRACK : '[';
 RBRACK : ']';
+LBRACE : '{';
+RBRACE : '}';
 
 
 PARSER_IDENTIFIER : LowercaseLetter Letter*;
@@ -88,5 +90,6 @@ LexerLiteral
     | LBRACK LITERAL+? RBRACK
     ;
 
+CodeLiteral : LBRACE LITERAL+? RBRACE;
 fragment
 LITERAL : . ;
