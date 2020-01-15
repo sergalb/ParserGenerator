@@ -5,6 +5,8 @@ import GrammarForGrammarsParser
 import Lexer
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
+import ru.ifmo.rain.balahnin.baseDir
+import ru.ifmo.rain.balahnin.grammarFile
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
@@ -87,7 +89,7 @@ val tokenCode = "data class MyToken(val name: String, var value: String?) {\n" +
         "}"
 fun main() {
     generateLexer()
-    val inS = File("$baseDir\\Test")
+    val inS = File("$baseDir\\CalculatorTest")
     val inp = inS.readText()
     val lexer = Lexer(inp)
     val res = lexer.scan()
@@ -106,7 +108,7 @@ fun generateTokenRules() {
 
 fun generateLexer() {
     generateTokenRules()
-    val tokenWriter = OutputStreamWriter(FileOutputStream("$baseDir\\Token.kt"))
+    val tokenWriter = OutputStreamWriter(FileOutputStream("$baseDir\\MyToken.kt"))
     tokenWriter.write(tokenCode)
     tokenWriter.close()
     val lexerWriter = OutputStreamWriter(FileOutputStream("$baseDir\\Lexer.kt"))

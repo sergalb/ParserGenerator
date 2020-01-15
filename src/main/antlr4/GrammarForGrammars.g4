@@ -1,21 +1,23 @@
 grammar GrammarForGrammars;
 
+options { contextSuperClass=org.antlr.v4.runtime.RuleContextWithAltNum; }
+
 grammar_
     :  GRAMMAR LEXER_IDENTIFIER SEMI (parsingRule | lexingRule | fragmentRule)* skipingCharacters?
     ;
 
 parsingRule
-    :   PARSER_IDENTIFIER COLON parsingAtom OR? SEMI
+    :   PARSER_IDENTIFIER COLON parsingAtom* SEMI
     ;
 
 parsingAtom
     :   LEXER_IDENTIFIER
     |   PARSER_IDENTIFIER
-    |   parsingAtom OR parsingAtom
-    |   LPAREN parsingAtom+ RPAREN
-    |   parsingAtom QUESTION
-    |   parsingAtom PLUS
-    |   parsingAtom STAR
+//    |   parsingAtom OR parsingAtom
+//    |   LPAREN parsingAtom+ RPAREN
+//    |   parsingAtom QUESTION
+//    |   parsingAtom PLUS
+//    |   parsingAtom STAR
     ;
 
 lexingRule

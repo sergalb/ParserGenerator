@@ -40,10 +40,15 @@ class FirstGeneratorVisitor(val first: MutableMap<String, MutableSet<String>> = 
                 }
             }
         }
-        if (ctx.childCount == 5) {
+        if (ctx.childCount == 3) {
             res.add("")
         }
-        first.putIfAbsent(ctx.getChild(0).text, res)
+        val identifier = ctx.PARSER_IDENTIFIER().text
+        if (first.containsKey(identifier)) {
+            first[identifier]!!.addAll(res)
+        } else {
+            first[identifier] =  res
+        }
         return res
     }
 
@@ -55,35 +60,35 @@ class FirstGeneratorVisitor(val first: MutableMap<String, MutableSet<String>> = 
         if (ctx.childCount == 1) {
             return setOf(ctx.text)
         }
-        if (ctx.childCount == 2) {
-            res.addAll(ctx.getChild(0).accept(this))
-            val operator = ctx.getChild(1).text
-            if (operator == "?" || operator == "*") {
-                res.add("")
-            }
-            return res
-        }
-        // A -> B | C
-        if (ctx.childCount == 3 && ctx.getChild(1).text == "|") {
-            res.addAll(ctx.getChild(0).accept(this))
-            res.addAll(ctx.getChild(2).accept(this))
-            return res
-        }
-        var hasEmpty = true
-        for (child in ctx.children) {
-            if (child !is TerminalNode) {
-                val childFirst = child.accept(this)
-                res.addAll(childFirst)
-                res.remove("")
-                if (!childFirst.contains("")) {
-                    hasEmpty = false
-                    break
-                }
-            }
-        }
-        if (hasEmpty) {
-            res.add("")
-        }
+//        if (ctx.childCount == 2) {
+//            res.addAll(ctx.getChild(0).accept(this))
+//            val operator = ctx.getChild(1).text
+//            if (operator == "?" || operator == "*") {
+//                res.add("")
+//            }
+//            return res
+//        }
+//        // A -> B | C
+//        if (ctx.childCount == 3 && ctx.getChild(1).text == "|") {
+//            res.addAll(ctx.getChild(0).accept(this))
+//            res.addAll(ctx.getChild(2).accept(this))
+//            return res
+//        }
+//        var hasEmpty = true
+//        for (child in ctx.children) {
+//            if (child !is TerminalNode) {
+//                val childFirst = child.accept(this)
+//                res.addAll(childFirst)
+//                res.remove("")
+//                if (!childFirst.contains("")) {
+//                    hasEmpty = false
+//                    break
+//                }
+//            }
+//        }
+//        if (hasEmpty) {
+//            res.add("")
+//        }
         return res
     }
 
