@@ -8,31 +8,32 @@ import org.antlr.v4.runtime.CommonTokenStream
 import ru.ifmo.rain.balahnin.lexer.generateLexer
 import Parser
 import ru.ifmo.rain.balahnin.parser.generateExecutingTable
-import ru.ifmo.rain.balahnin.parser.generateParser
+import ru.ifmo.rain.balahnin.parser.generateParserFromTable
 import java.io.File
 
 val baseDir = "C:\\Users\\Sergalb\\Desktop\\ParserGenerator\\target\\generated-sources\\my"
 val baseDirForCodeGeneration = baseDir.replace("\\", "\\\\")
-val grammarFile = "Calculator.g4"
+lateinit var grammarFile:String
 val tableFileName = "Table"
 val alphabetFile = "Alphabet"
-var inputFile = "CalculatorTest"
 
-fun main() {
+fun generateParser(grammarPath: String) {
+    grammarFile = grammarPath
     generateLexer()
-    val inS = File("$baseDir\\$inputFile")
-    val inp = inS.readText()
-    val lexer = Lexer(inp)
-    val res = lexer.scan()
     generateExecutingTable()
-    generateParser()
+    generateParserFromTable()
+}
+
+fun startParse(input: String) {
+    val lexer = Lexer(input)
+    val res = lexer.scan()
     val parser = Parser()
     val rootToken = parser.parse(res)
     println(rootToken.value)
 }
 
 fun getGrammarContext(): GrammarForGrammarsParser.Grammar_Context {
-    val lexer = GrammarForGrammarsLexer(CharStreams.fromFileName("$baseDir\\$grammarFile"))
+    val lexer = GrammarForGrammarsLexer(CharStreams.fromFileName(grammarFile))
     val parser = GrammarForGrammarsParser(CommonTokenStream(lexer))
     return parser.grammar_()
 }

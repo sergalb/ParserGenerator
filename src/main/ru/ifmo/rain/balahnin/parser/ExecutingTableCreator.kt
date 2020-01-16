@@ -1,16 +1,18 @@
 package ru.ifmo.rain.balahnin.parser
 
-import GrammarForGrammarsLexer
 import GrammarForGrammarsParser
-import org.antlr.v4.runtime.CharStreams
-import org.antlr.v4.runtime.CommonTokenStream
-import ru.ifmo.rain.balahnin.*
-import java.io.*
+import ru.ifmo.rain.balahnin.alphabetFile
+import ru.ifmo.rain.balahnin.baseDir
+import ru.ifmo.rain.balahnin.getGrammarContext
+import ru.ifmo.rain.balahnin.tableFileName
+import java.io.FileOutputStream
+import java.io.ObjectOutputStream
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 import kotlin.collections.LinkedHashMap
+import kotlin.math.pow
 
 
 val first: MutableMap<String, MutableSet<String>> = LinkedHashMap()
@@ -50,6 +52,7 @@ class AutomatonNode(var creationInd: Int, val rules: List<Rule>) {
     override fun toString(): String {
         return rules.toString()
     }
+
     var ind = 0
 }
 
@@ -73,7 +76,6 @@ fun generateExecutingTable() {
     val oos = ObjectOutputStream(FileOutputStream("$baseDir\\$alphabetFile"))
     oos.writeObject(alphabet)
     oos.close()
-
 }
 
 fun generateFirst(grammarContext: GrammarForGrammarsParser.Grammar_Context) {

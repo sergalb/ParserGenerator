@@ -57,7 +57,7 @@ val lexerCode =
             "            for ((regexpString, token) in regexps) {\n" +
             "                var regexp : Regex =\n" +
             "                try {\n" +
-            "                     Regex(\"\"\"\$regexpString\"\"\")\n" +
+            "                     Regex(regexpString)\n" +
             "                } catch (e: PatternSyntaxException) {\n" +
             "                     Regex(escape(regexpString))\n" +
             "                }\n" +
@@ -83,9 +83,10 @@ val lexerCode =
             "\n" +
             "}\n" +
             "\n"
-private val tokenCode = "data class MyToken(val name: String, var value: String) {\n" +
+private val tokenCode = "data class MyToken(val name: String, var value: String, val children: MutableList<MyToken> = ArrayList()) {\n" +
         "    constructor(other: MyToken) : this(other.name, other.value)\n" +
         "}"
+
 fun main() {
     generateLexer()
     val inS = File("$baseDir\\CalculatorTest")

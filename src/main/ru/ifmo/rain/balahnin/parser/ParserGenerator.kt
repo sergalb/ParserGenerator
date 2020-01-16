@@ -20,6 +20,7 @@ val commonParserCode = "import GrammarForGrammarsLexer\n" +
         "import java.lang.IllegalStateException\n" +
         "import java.util.*\n" +
         "import kotlin.collections.ArrayList\n" +
+        "import kotlin.math.*\n" +
         "\n" +
         "class Parser {\n" +
         "    private val table: List<MutableList<Pair<String, Int>>>\n" +
@@ -36,7 +37,7 @@ val commonParserCode = "import GrammarForGrammarsLexer\n" +
         "        alphabetIndexed =\n" +
         "            alphabet.keys.mapIndexed { ind, value -> value to ind }\n" +
         "                .plus(Pair(\"\$\", alphabet.size)).toMap()\n" +
-        "        val lexer = GrammarForGrammarsLexer(CharStreams.fromFileName(\"$baseDirForCodeGeneration\\\\$grammarFile\"))\n" +
+        "        val lexer = GrammarForGrammarsLexer(CharStreams.fromFileName(\"${grammarFile.replace("\\", "\\\\")}\"))\n" +
         "        val parser = GrammarForGrammarsParser(CommonTokenStream(lexer))\n" +
         "        tree = parser.grammar_()\n" +
         "        IndexVisitor().visitGrammar_(tree)\n" +
@@ -71,7 +72,7 @@ val commonParserCode = "import GrammarForGrammarsLexer\n" +
         "                    }\n" +
         "                    val newTokenValue = attributeCalculation[action.second](right)\n" +
         "                    val newTokenName = rule.PARSER_IDENTIFIER().text\n" +
-        "                    stack.push(MyToken(newTokenName, newTokenValue))\n" +
+        "                    stack.push(MyToken(newTokenName, newTokenValue, right))\n" +
         "                    val prevState = stateIndexes.peek()\n" +
         "                    stateIndexes.push(table[prevState][alphabetIndexed[newTokenName]!!].second)\n" +
         "                }\n" +
@@ -85,8 +86,10 @@ val commonParserCode = "import GrammarForGrammarsLexer\n" +
         "        error(\"acceptable state was not reached\")\n" +
         "    }\n" +
         "}\n"
+
 private val atributeDeclaration = "val attributeCalculation: List<(List<MyToken>) -> String>"
-fun generateParser(){
+
+fun generateParserFromTable() {
     val parserWriter = OutputStreamWriter(FileOutputStream("$baseDir\\Parser.kt"))
     parserWriter.write(commonParserCode)
     val tree = getGrammarContext()
