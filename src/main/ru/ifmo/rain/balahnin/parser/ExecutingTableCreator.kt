@@ -45,14 +45,12 @@ data class Rule(
     }
 }
 
-class AutomatonNode(var creationInd: Int, val rules: List<Rule>, var parent: AutomatonNode?, var parentVersion: Int) {
+class AutomatonNode(var creationInd: Int, val rules: List<Rule>) {
     val transitions: MutableMap<String, AutomatonNode> = HashMap()
     override fun toString(): String {
         return rules.toString()
     }
-
     var ind = 0
-    var version = 0
 }
 
 fun generateExecutingTable() {
@@ -86,7 +84,7 @@ fun generateFirst(grammarContext: GrammarForGrammarsParser.Grammar_Context) {
 fun generateExecutingAutomaton(grammarContext: GrammarForGrammarsParser.Grammar_Context) {
     alphabet = AlphabetVisitor().visit(grammarContext)
     val startRule = closure(Rule(grammarContext.parsingRule(0), 0, mutableSetOf("$")), grammarContext)
-    root = AutomatonNode(countStates++, startRule, null, 0)
+    root = AutomatonNode(countStates++, startRule)
     val stack: MutableList<AutomatonNode> = LinkedList()
     stack.add(root)
     while (stack.isNotEmpty()) {
@@ -112,7 +110,7 @@ fun generateExecutingAutomaton(grammarContext: GrammarForGrammarsParser.Grammar_
             } else if (newNodeRules.isNotEmpty()) {
                 vertexesForAdding.add(
                     Pair(
-                        AutomatonNode(countStates++, newNodeRules, curNode, curNode.version),
+                        AutomatonNode(countStates++, newNodeRules),
                         symbol
                     )
                 )
