@@ -6,6 +6,8 @@ import Lexer
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import ru.ifmo.rain.balahnin.baseDir
+import ru.ifmo.rain.balahnin.baseDirForCodeGeneration
+import ru.ifmo.rain.balahnin.getGrammarContext
 import ru.ifmo.rain.balahnin.grammarFile
 import java.io.File
 import java.io.FileOutputStream
@@ -21,7 +23,7 @@ val lexerCode =
             "    val regexps:MutableMap<String, MyToken> = HashMap()\n" +
             "    lateinit var whiteSpaces: List<Char>\n" +
             "    init {\n" +
-            "        val tokensFile = File(\"${baseDir.replace("\\", "\\\\")}\\\\$tokensFileName\")\n" +
+            "        val tokensFile = File(\"$baseDirForCodeGeneration\\\\$tokensFileName\")\n" +
             "        for (line in tokensFile.readLines()) {\n" +
             "            val (identifier, value) = line.split(\" \")\n" +
             "\n" +
@@ -81,7 +83,7 @@ val lexerCode =
             "\n" +
             "}\n" +
             "\n"
-val tokenCode = "data class MyToken(val name: String, var value: String) {\n" +
+private val tokenCode = "data class MyToken(val name: String, var value: String) {\n" +
         "    constructor(other: MyToken) : this(other.name, other.value)\n" +
         "}"
 fun main() {
@@ -94,9 +96,7 @@ fun main() {
 }
 
 fun generateTokenRules() {
-    val lexer = GrammarForGrammarsLexer(CharStreams.fromFileName("$baseDir\\$grammarFile"))
-    val parser = GrammarForGrammarsParser(CommonTokenStream(lexer))
-    val tree = parser.grammar_()
+    val tree = getGrammarContext()
     val outputStreamWriter = OutputStreamWriter(FileOutputStream("$baseDir\\$tokensFileName"))
     val visitor = LexerVisitor(outputStreamWriter)
     visitor.visitGrammar_(tree)

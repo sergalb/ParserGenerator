@@ -4,10 +4,7 @@ import GrammarForGrammarsLexer
 import GrammarForGrammarsParser
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import ru.ifmo.rain.balahnin.alphabetFile
-import ru.ifmo.rain.balahnin.baseDir
-import ru.ifmo.rain.balahnin.grammarFile
-import ru.ifmo.rain.balahnin.tableFileName
+import ru.ifmo.rain.balahnin.*
 import java.io.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -59,9 +56,7 @@ class AutomatonNode(var creationInd: Int, val rules: List<Rule>, var parent: Aut
 }
 
 fun generateExecutingTable() {
-    val lexer = GrammarForGrammarsLexer(CharStreams.fromFileName("$baseDir\\$grammarFile"))
-    val parser = GrammarForGrammarsParser(CommonTokenStream(lexer))
-    val tree = parser.grammar_()
+    val tree = getGrammarContext()
     generateFirst(tree)
     generateExecutingAutomaton(tree)
     IndexVisitor().visitGrammar_(tree)
@@ -88,12 +83,6 @@ fun generateFirst(grammarContext: GrammarForGrammarsParser.Grammar_Context) {
     visitor.visitGrammar_(grammarContext)
 }
 
-//fun generateFollow(grammarContext: GrammarForGrammarsParser.Grammar_Context) {
-//    follow["start"] = mutableSetOf("$")
-//    val visitor = FollowGeneratorVisitor(first, follow)
-//    visitor.visitGrammar_(grammarContext)
-//}
-
 fun generateExecutingAutomaton(grammarContext: GrammarForGrammarsParser.Grammar_Context) {
     alphabet = AlphabetVisitor().visit(grammarContext)
     val startRule = closure(Rule(grammarContext.parsingRule(0), 0, mutableSetOf("$")), grammarContext)
@@ -101,7 +90,7 @@ fun generateExecutingAutomaton(grammarContext: GrammarForGrammarsParser.Grammar_
     val stack: MutableList<AutomatonNode> = LinkedList()
     stack.add(root)
     while (stack.isNotEmpty()) {
-        val curNode = stack.removeAt(stack.size - 1)
+        val curNode = stack.removeAt(0)
         val vertexesForAdding: MutableList<Pair<AutomatonNode, String>> = ArrayList()
         var hasLoop = false
         for ((symbol, _) in alphabet) {
@@ -131,7 +120,6 @@ fun generateExecutingAutomaton(grammarContext: GrammarForGrammarsParser.Grammar_
         }
         if (!hasLoop) {
             for ((newNode, symbol) in vertexesForAdding) {
-                clearStack(stack, newNode)
                 curNode.transitions[symbol] = newNode
                 stack.add(newNode)
             }
@@ -227,25 +215,12 @@ private fun first(
         } else {
             res.addAll(first[symbol.text]!!)
         }
-        //todo is it correct? i think yes
         if (!res.contains("")) {
             return res
         }
     }
     res.addAll(lookahead)
     return res
-}
-
-private fun clearStack(stack: MutableList<AutomatonNode>, node: AutomatonNode, was: MutableList<Boolean> = MutableList(countStates) { false}) {
-    if (was[node.creationInd]) {
-        return
-    }
-    was[node.creationInd] = true
-    stack.removeIf { it.creationInd == node.creationInd }
-    for ((_, child) in node.transitions) {
-        stack.removeIf { it.creationInd == child.creationInd }
-        clearStack(stack, child, was)
-    }
 }
 
 private fun include(first: List<Rule>, second: List<Rule>): Boolean {
@@ -291,7 +266,7 @@ private fun printAutomaton(node: AutomatonNode, was: MutableList<Boolean> = Muta
     was[node.creationInd] = true
     println("$node\n")
     for ((_, transition) in node.transitions) {
-        val res = printAutomaton(transition, was)
+        printAutomaton(transition, was)
     }
     return
 }
