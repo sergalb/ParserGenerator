@@ -17,6 +17,10 @@ lateinit var grammarFile:String
 val tableFileName = "Table"
 val alphabetFile = "Alphabet"
 
+fun main() {
+    generateParser("C:\\Users\\Sergalb\\Desktop\\ParserGenerator\\src\\test\\ru\\ifmo\\rain\\balahnin\\calculator\\Calculator.g4")
+}
+
 fun generateParser(grammarPath: String) {
     grammarFile = grammarPath
     generateLexer()
@@ -24,13 +28,6 @@ fun generateParser(grammarPath: String) {
     generateParserFromTable()
 }
 
-fun startParse(input: String) {
-    val lexer = Lexer(input)
-    val res = lexer.scan()
-    val parser = Parser()
-    val rootToken = parser.parse(res)
-    println(rootToken.value)
-}
 
 fun getGrammarContext(): GrammarForGrammarsParser.Grammar_Context {
     val lexer = GrammarForGrammarsLexer(CharStreams.fromFileName(grammarFile))

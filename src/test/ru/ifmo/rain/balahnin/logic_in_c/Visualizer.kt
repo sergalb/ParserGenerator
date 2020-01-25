@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 private val STEP = 7
 fun printTree(expression: MyToken, depth: Int = 0) {
     if (expression.children.size == 0) {
-        println((" ".repeat(STEP - 1) + "|").repeat(depth)  + "${expression.name}: ${expression.value}")
+        println((" ".repeat(STEP - 1) + "|").repeat(depth)  + "${expression.name}")
         return
     }
 

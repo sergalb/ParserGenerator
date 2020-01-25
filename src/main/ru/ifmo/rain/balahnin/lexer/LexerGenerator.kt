@@ -1,14 +1,9 @@
 package ru.ifmo.rain.balahnin.lexer
 
-import GrammarForGrammarsLexer
-import GrammarForGrammarsParser
 import Lexer
-import org.antlr.v4.runtime.CharStreams
-import org.antlr.v4.runtime.CommonTokenStream
 import ru.ifmo.rain.balahnin.baseDir
 import ru.ifmo.rain.balahnin.baseDirForCodeGeneration
 import ru.ifmo.rain.balahnin.getGrammarContext
-import ru.ifmo.rain.balahnin.grammarFile
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter

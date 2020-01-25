@@ -4,9 +4,9 @@ import Lexer
 import Parser
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import org.junit.platform.commons.logging.LoggerFactory
 import ru.ifmo.rain.balahnin.generateParser
-import ru.ifmo.rain.balahnin.logic_in_c.printTree
+import java.util.*
+import kotlin.math.abs
 import kotlin.test.assertEquals
 
 
@@ -29,7 +29,7 @@ class CalculatorTester {
         val res = lexer.scan()
         val parser = Parser()
         val rootToken = parser.parse(res)
-        assertEquals(1, rootToken.value.toInt())
+        assertEquals(1.0, rootToken.value.toDouble())
     }
 
     @Test
@@ -38,7 +38,7 @@ class CalculatorTester {
         val res = lexer.scan()
         val parser = Parser()
         val rootToken = parser.parse(res)
-        assertEquals(3, rootToken.value.toInt())
+        assertEquals(3.0, rootToken.value.toDouble())
     }
 
     @Test
@@ -47,7 +47,7 @@ class CalculatorTester {
         val res = lexer.scan()
         val parser = Parser()
         val rootToken = parser.parse(res)
-        assertEquals(6, rootToken.value.toInt())
+        assertEquals(6.0, rootToken.value.toDouble())
     }
 
     @Test
@@ -56,7 +56,7 @@ class CalculatorTester {
         val res = lexer.scan()
         val parser = Parser()
         val rootToken = parser.parse(res)
-        assertEquals(8, rootToken.value.toInt())
+        assertEquals(8.0, rootToken.value.toDouble())
     }
 
     @Test
@@ -65,7 +65,7 @@ class CalculatorTester {
         val res = lexer.scan()
         val parser = Parser()
         val rootToken = parser.parse(res)
-        assertEquals(6, rootToken.value.toInt())
+        assertEquals(6.0, rootToken.value.toDouble())
     }
 
     @Test
@@ -74,7 +74,26 @@ class CalculatorTester {
         val res = lexer.scan()
         val parser = Parser()
         val rootToken = parser.parse(res)
-        assertEquals(-1500632380, rootToken.value.toInt())
+        val EPS = 1e1
+        println(rootToken.value.toDouble())
+        assert( abs(rootToken.value.toDouble() - -1.5006171270071795E9) < EPS)
     }
 
+    @Test
+    fun unaryMinus() {
+        val lexer = Lexer("-1")
+        val res = lexer.scan()
+        val parser = Parser()
+        val rootToken = parser.parse(res)
+        assertEquals(-1.0, rootToken.value.toDouble())
+    }
+
+    @Test
+    fun power() {
+        val lexer = Lexer("2^3^2")
+        val res = lexer.scan()
+        val parser = Parser()
+        val rootToken = parser.parse(res)
+        assertEquals(512.0, rootToken.value.toDouble())
+    }
 }
