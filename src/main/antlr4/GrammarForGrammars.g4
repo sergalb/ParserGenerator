@@ -13,11 +13,6 @@ parsingRule
 parsingAtom
     :   LEXER_IDENTIFIER
     |   PARSER_IDENTIFIER
-//    |   parsingAtom OR parsingAtom
-//    |   LPAREN parsingAtom+ RPAREN
-//    |   parsingAtom QUESTION
-//    |   parsingAtom PLUS
-//    |   parsingAtom STAR
     ;
 
 lexingRule
